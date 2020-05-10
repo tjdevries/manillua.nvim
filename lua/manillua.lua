@@ -29,6 +29,11 @@ patterns.end_only = '^end$'
 
 patterns.module_return= '^return'
 
+patterns.comment_level = [[^--\W*\d]]
+
+_, patterns.fold_marker_start = pcall(function() return vim.split(vim.wo.foldmarker, ",")[1] end)
+_, patterns.fold_marker_end = pcall(function() return vim.split(vim.wo.foldmarker, ",")[2] end)
+
 --- Match `str` to `patterns`
 -- @param str string - The string to match
 -- @param patterns table|string - A single or list of patterns to match upon
@@ -66,7 +71,14 @@ function manillua.foldexpr(line_num)
   local next_line = vim.fn.getline(line_num + 1)
 
   if line == '' then
+    -- TODO: Better 'import' catching and maybe make it level 2
     return l.same
+  end
+
+  if matches(line, patterns.comment_level) then
+    local start, finish = string.find(line, '[0-9]+')
+
+    return l.start(string.sub(line, start, finish))
   end
 
   if matches(line, patterns.end_only) then
@@ -74,6 +86,14 @@ function manillua.foldexpr(line_num)
       return l.same
     end
 
+    return l.subtract(1)
+  end
+
+  if string.find(line, patterns.fold_marker_start) then
+    return l.add(1)
+  end
+
+  if string.find(line, patterns.fold_marker_end) then
     return l.subtract(1)
   end
 
