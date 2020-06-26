@@ -29,7 +29,7 @@ patterns.end_only = '^end$'
 
 patterns.module_return= '^return'
 
-patterns.comment_level = [[^--\W*\d]]
+patterns.comment_level = [[^--\W*\d:]]
 
 _, patterns.fold_marker_start = pcall(function() return vim.split(vim.wo.foldmarker, ",")[1] end)
 _, patterns.fold_marker_end = pcall(function() return vim.split(vim.wo.foldmarker, ",")[2] end)
