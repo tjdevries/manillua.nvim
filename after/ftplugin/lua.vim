@@ -7,3 +7,4 @@ setlocal foldexpr=v:lua.manillua.foldexpr(v:lnum)
 setlocal foldtext=v:lua.manillua.foldtext()
 setlocal fillchars=fold:\ 
 
+setlocal foldlevel=3
